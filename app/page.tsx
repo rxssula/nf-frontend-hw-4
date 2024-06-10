@@ -1,7 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import getAllProducts from "./utils/services/productsService";
+import { getAllProducts } from "@/api/axiosInstance";
+import { QueryClient, useQuery } from "@tanstack/react-query";
+import ProductCard from "./components/ProductCard";
 
 export default function Home() {
   const { data, error, isLoading } = useQuery({
@@ -14,12 +15,10 @@ export default function Home() {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div>
-      <ul>
-        {data?.map((product) => (
-          <li key={product.id}>{product.title}</li>
-        ))}
-      </ul>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 container mx-auto">
+      {data?.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
     </div>
   );
 }

@@ -9,7 +9,7 @@ export interface Product {
   image: string;
 };
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
     baseURL: "https://fakestoreapi.com"
 })
 
