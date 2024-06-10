@@ -10,29 +10,40 @@ const CreateItem: React.FunctionComponent<ICreateItemProps> = (props) => {
   const [price, setPrice] = React.useState(0);
   const [category, setCategory] = React.useState("");
   const [description, setDescription] = React.useState("");
-  const [file, setFile] = React.useState<File | null>(null);
+  const [files, setFiles] = React.useState<File[]>([]);
 
   const { mutate: createProduct } = useCreateProduct();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!file) {
+    if (files.length === 0) {
       return;
     }
 
-    const formData = new FormData();
+    let imageUrls = [];
 
-    formData.append("file", file);
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append("file", file);
 
-    const uploadResult = await uploadImage(formData);
+      const uploadResult = await uploadImage(formData);
+      imageUrls.push(uploadResult.location);
+    }
+
+    // const formData = new FormData();
+
+    // formData.append("file", file);
+
+    // const uploadResult = await uploadImage(formData);
 
     createProduct({
       title,
       price,
       category,
       description,
-      image: uploadResult.location,
+      image: imageUrls,
+      //   image: uploadResult.location,
     });
     setTitle("");
     setPrice(0);
@@ -43,7 +54,8 @@ const CreateItem: React.FunctionComponent<ICreateItemProps> = (props) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFile(e.target.files[0]);
+      //   setFile(e.target.files[0]);
+      setFiles(Array.from(e.target.files));
     }
   };
 
@@ -103,6 +115,7 @@ const CreateItem: React.FunctionComponent<ICreateItemProps> = (props) => {
           </label>
           <input
             onChange={handleFileChange}
+            multiple
             type="file"
             id="file"
             className="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"

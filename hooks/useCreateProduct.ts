@@ -7,7 +7,7 @@ interface ProductData {
     price: number;
     category: string;
     description: string;
-    image: string;
+    image: string[];
 }
 
 const createProduct = async (productData: ProductData): Promise<Product> => {
